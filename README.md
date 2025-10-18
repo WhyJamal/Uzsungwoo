@@ -30,7 +30,7 @@ Follow these steps to set up the project locally. Ensure Node.js and npm are ins
 1. Clone the repository:
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/WhyJamal/Uzsungwoo.git
 cd <repository-folder>
 ```
 
