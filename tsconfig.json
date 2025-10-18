@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+      "forceConsistentCasingInFileNames": true,
+      "target": "ESNext",
+      "module": "ESNext",
+      "moduleResolution": "Node",
+      "strict": true,
+      "jsx": "preserve",
+      "isolatedModules": true,
+      "esModuleInterop": true,
+      "useDefineForClassFields": true,
+      "allowSyntheticDefaultImports": true,
+      "skipLibCheck": true,
+      "resolveJsonModule": true,
+      "types": ["node", "vue"]
+    },
+    "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.vue"]
+  }
+  
