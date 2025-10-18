@@ -96,6 +96,9 @@ To contribute:
 
 This project is licensed under the [MIT License](./LICENSE).
 
-## Author
+## Author & Contact
 
-WhyJamal
+- **Author:** WhyJamal
+- **Project Name:** Uzsungwoo
+- **Description:** Web-based 1C integration and production management system.
+- **Contact:** Add your preferred contact (email, Telegram, or Slack) here.
