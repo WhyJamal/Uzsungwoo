@@ -2,14 +2,17 @@
   <Header />
 
   <form @submit.prevent="handleLogin" class="h-screen overflow-x-hidden">
-    <div class="h-screen relative flex items-center justify-center overflow-hidden">
-      
+    <div
+      class="h-screen relative flex items-center justify-center overflow-hidden"
+    >
       <div
         class="absolute inset-0 bg-cover bg-center filter blur-sm scale-105 animate-pulse-slow"
-        style="background-image: url('/others/Slit.jpg');"
+        style="background-image: url('/others/Slit.jpg')"
       ></div>
 
-      <div class="absolute inset-0 bg-gradient-to-b from-indigo-400/20 to-indigo-600/30 backdrop-blur-sm"></div>
+      <div
+        class="absolute inset-0 bg-gradient-to-b from-indigo-400/20 to-indigo-600/30 backdrop-blur-sm"
+      ></div>
 
       <div
         class="relative z-10 bg-white rounded-3xl shadow-2xl border p-8 w-full max-w-sm flex flex-col gap-6 transform transition-transform duration-500 hover:scale-105"
@@ -49,12 +52,10 @@
         </div>
 
         <button
-          @click="handleLogin"
-          class="px-6 py-3 rounded-xl bg-gradient-to-r from-indigo-500 to-indigo-700 text-white font-bold shadow-xl
-                 hover:scale-105 hover:shadow-2xl active:scale-95 transition-all duration-300"
+          class="px-6 py-3 rounded-xl bg-gradient-to-r from-indigo-500 to-indigo-700 text-white font-bold shadow-xl hover:scale-105 hover:shadow-2xl active:scale-95 transition-all duration-300"
         >
-          Вход
-        </button>
+          Вход</button
+        ><!-- @click="handleLogin" -->
 
         <p v-if="error" class="text-red-500 text-sm text-center">{{ error }}</p>
       </div>
@@ -62,50 +63,51 @@
   </form>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import Header from "@/components/headers/Header.vue";
 import { ref, onMounted, nextTick } from "vue";
 import { useRouter } from "vue-router";
 import api from "@/utils/axios";
 import { useUserStore } from "@/stores/user";
-import { stageRoutes } from "@/config/stageRoutes";
+import { roleRoutes } from "@/config/roleRoutes";
+import type { User } from "@/stores/user";
 
-const code = ref("");
-const inputRef = ref(null);
-const error = ref("");
+const code = ref<string>("");
+const inputRef = ref<HTMLInputElement | null>(null);
+const error = ref<string>("");
+const loading = ref<boolean>(false);
+
 const router = useRouter();
 const userStore = useUserStore();
-const loading = ref(false);
 
 const handleLogin = async () => {
-  router.push('/shipment');
-  // if (!code.value.trim()) {
-  //   alert("Введите код сотрудника.");
-  //   return;
-  // }
+  if (!code.value.trim()) {
+    alert("Введите код сотрудника.");
+    return;
+  }
 
-  // loading.value = true;
-  // try {
-  //   const response = await api.get(`/v1/login?code=${code.value}`);
-  //   console.log("Response:", response.data);
+  loading.value = true;
+  try {
+    const response = await api.get<User[]>(`/ver1/login?code=${code.value}`);
+    console.log("Response:", response.data);
 
-  //   if (response.status === 200 && response.data.length) {
-  //     const user = response.data[0];
-  //     user.code = code.value;
-  //     userStore.setUser(user);
+    if (response.status === 200 && response.data.length) {
+      const user: User = response.data[0];
+      user.code = code.value;
+      userStore.setUser(user);
 
-  //     const stage = user.stage;
-  //     const route = stageRoutes[stage] || "/not-authorized";
-  //     router.push(route);
-  //   } else {
-  //     alert("Требуется авторизация");
-  //   }
-  // } catch (err) {
-  //   console.error("API error:", err.response || err);
-  //   alert("Требуется авторизация");
-  // } finally {
-  //   loading.value = false;
-  // }
+      const role = user.role as keyof typeof roleRoutes;
+      const route = roleRoutes[role] || "/not-authorized";
+      router.push(route);
+    } else {
+      alert("Требуется авторизация");
+    }
+  } catch (err: any) {
+    console.error("API error:", err.response || err);
+    alert("Требуется авторизация");
+  } finally {
+    loading.value = false;
+  }
 };
 
 async function focusInput() {
@@ -161,8 +163,13 @@ function keepFocus() {
 }
 /* Custom slow pulse for background */
 @keyframes pulse-slow {
-  0%, 100% { transform: scale(1.05); }
-  50% { transform: scale(1.1); }
+  0%,
+  100% {
+    transform: scale(1.05);
+  }
+  50% {
+    transform: scale(1.1);
+  }
 }
 .animate-pulse-slow {
   animation: pulse-slow 12s ease-in-out infinite;

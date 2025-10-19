@@ -1,1 +1,2 @@
 @headlessui/vue
+lucide-vue-next
