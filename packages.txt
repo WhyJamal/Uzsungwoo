@@ -1,2 +1,4 @@
 @headlessui/vue
 lucide-vue-next
+vue-chartjs
+chart.js

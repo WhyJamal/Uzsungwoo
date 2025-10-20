@@ -1,64 +1,114 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { Truck, QrCode, TrendingUp } from "lucide-vue-next";
+import { Truck, QrCode, TrendingUp, Package } from "lucide-vue-next";
 
 const isVisible = ref(true);
 </script>
 
 <template>
-  <div class="p-2 bg-white/50">
-    <button
-      @click="isVisible = !isVisible"
-      class="mb-3 flex items-center justify-center w-10 h-1.5 bg-gray-400 rounded-full hover:bg-gray-600 transition"
-      title="Скрить"
-    ></button>
-
+  <div class="p-1 bg-sky-100">
     <transition name="fade">
-      <div v-if="isVisible" class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div v-if="isVisible" class="grid grid-cols-1 sm:grid-cols-4 gap-1.5">
         <div
-          class="flex items-center justify-between bg-sky-100 rounded-lg shadow-sm p-4 hover:shadow-md transition"
+          class="flex items-center justify-between bg-gradient-to-r from-sky-400 to-sky-500 rounded-lg shadow p-2.5 hover:shadow-md transition-all duration-300"
         >
           <div class="flex flex-col justify-center text-center w-full">
-            <span class="text-gray-700 font-medium">Продажи</span>
-            <span class="text-xs text-gray-400">Orders</span>
-            <span class="text-xl font-bold text-gray-800 mt-1">2403</span>
+            <h3 class="text-white/90 font-semibold text-[12px] mb-0.5">
+              Продажи
+            </h3>
+            <span class="text-white/70 text-[10px]">Orders</span>
+            <span class="text-white text-lg font-bold mt-0.5 drop-shadow-sm"
+              >2403</span
+            >
           </div>
-          <div class="bg-sky-200 text-sky-600 p-2 rounded-md ml-3">
-            <QrCode class="w-10 h-10 p-1 rounded-md text-gray-600" />
+
+          <div
+            class="bg-white/20 backdrop-blur-md p-1.5 rounded-md ml-1.5 flex items-center justify-center shadow-inner"
+          >
+            <QrCode class="w-4 h-4 text-white" />
           </div>
         </div>
 
         <div
-          class="flex items-center justify-between bg-blue-100 rounded-lg shadow-sm p-4 hover:shadow-md transition"
+          class="flex items-center justify-between bg-gradient-to-r from-sky-400 to-sky-500 rounded-lg shadow p-2.5 hover:shadow-md transition-all duration-300"
         >
           <div class="flex flex-col justify-center text-center w-full">
-            <span class="text-gray-700 font-medium">Отгрузки</span>
-            <span class="text-xs text-gray-400">Delivery</span>
-            <span class="text-xl font-bold text-gray-800 mt-1">1000</span>
+            <h3 class="text-white/90 font-semibold text-[12px] mb-0.5">
+              Отгрузки
+            </h3>
+            <span class="text-white/70 text-[10px]">Delivery</span>
+            <span class="text-white text-lg font-bold mt-0.5 drop-shadow-sm"
+              >1000</span
+            >
           </div>
-          <div class="bg-sky-200 text-sky-600 p-2 rounded-md">
-            <Truck class="w-10 h-10 p-1 rounded-md text-gray-600" />
+
+          <div
+            class="bg-white/20 backdrop-blur-md p-1.5 rounded-md ml-1.5 flex items-center justify-center shadow-inner"
+          >
+            <Package class="w-4 h-4 text-white" />
           </div>
         </div>
 
         <div
-          class="flex items-center justify-between rounded-lg shadow-sm p-4 hover:shadow-md transition bg-yellow-100"
+          class="flex items-center justify-between bg-gradient-to-r from-emerald-400 to-emerald-500 rounded-lg shadow p-2.5 hover:shadow-md transition-all duration-300"
         >
           <div class="flex flex-col justify-center text-center w-full">
-            <span class="text-gray-700 font-medium">Выполнено</span>
-            <span class="text-xs text-gray-400">Completed</span>
-            <div class="flex items-center justify-center space-x-2 mt-1">
-              <span class="text-xl font-bold text-gray-800">12%</span>
-              <div class="w-16 h-2 bg-gray-200 rounded-full overflow-hidden">
+            <h3 class="text-white/90 font-semibold text-[12px] mb-0.5">
+              Выполнено
+            </h3>
+            <span class="text-white/70 text-[10px]">Completed</span>
+
+            <div class="flex items-center justify-center gap-1.5 mt-1">
+              <span class="text-white text-[14px] font-extrabold drop-shadow-sm"
+                >12%</span
+              >
+              <div class="w-14 h-1 bg-white/30 rounded-full overflow-hidden">
                 <div
-                  class="h-2 bg-yellow-400 rounded-full"
+                  class="h-1 bg-white rounded-full transition-all duration-500"
                   style="width: 12%"
                 ></div>
               </div>
             </div>
           </div>
-          <div class="bg-yellow-200 text-yellow-600 p-2 rounded-md ml-3">
-            <TrendingUp class="w-10 h-10 p-1 rounded-md text-gray-600" />
+
+          <div
+            class="bg-white/20 backdrop-blur-md p-1.5 rounded-md ml-1.5 flex items-center justify-center shadow-inner"
+          >
+            <TrendingUp class="w-4 h-4 text-white" />
+          </div>
+        </div>
+
+        <div
+          class="flex items-center justify-between bg-gradient-to-r from-sky-400 to-sky-500 rounded-lg shadow p-2.5 hover:shadow-md transition-all duration-300"
+        >
+          <div class="flex flex-col justify-center text-center w-full">
+            <h3
+              class="text-white/90 font-semibold text-[12px] mb-0.5 leading-tight"
+            >
+              Количество транспортов
+            </h3>
+            <div class="flex justify-center gap-3 mt-0.5">
+              <div class="flex flex-col items-center">
+                <span class="text-white/80 text-[10px]">На территории</span>
+                <span
+                  class="text-white text-[15px] font-bold mt-0.5 drop-shadow-sm"
+                  >12</span
+                >
+              </div>
+              <div class="flex flex-col items-center">
+                <span class="text-white/80 text-[10px]">Погружено</span>
+                <span
+                  class="text-white text-[15px] font-bold mt-0.5 drop-shadow-sm"
+                  >17</span
+                >
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="bg-white/20 backdrop-blur-md p-1.5 rounded-md ml-1.5 flex items-center justify-center shadow-inner"
+          >
+            <Truck class="w-4 h-4 text-white" />
           </div>
         </div>
       </div>

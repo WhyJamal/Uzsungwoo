@@ -92,7 +92,7 @@ const confirmed = ref<Row[]>([
 
 const cardsData = computed<StatCard[]>(() => [
   {
-    subtitle: "Продажи (Invoices)",
+    subtitle: "Счета-фактуры (Invoices)",
     value: invoices.value.length,
     type: "sales",
     bgColor: "bg-sky-100",
