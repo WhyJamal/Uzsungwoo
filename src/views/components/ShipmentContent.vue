@@ -35,9 +35,20 @@ const isLoaddeliveries = ref<boolean>(false);
 const isLoadInfoData = ref<boolean>(false);
 const isLoadStats = ref<boolean>(false);
 
-const handleEnter = (): void => {
-  alert(inputValue.value);
-  inputValue.value = "";
+const handleEnter = async (): Promise<void> => {
+  if (!inputValue.value.trim()) return;
+
+  try {
+    const response = await api.patch("/ver1/update_by_barcode/", {
+      barcode: inputValue.value,
+    });
+
+    alert(`Succesfuly: ${inputValue.value}`);
+  } catch (error) {
+    alert("Error");
+  } finally {
+    inputValue.value = "";
+  }
 };
 
 async function loadInvoice(): Promise<void> {
