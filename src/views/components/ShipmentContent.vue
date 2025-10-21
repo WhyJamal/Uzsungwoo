@@ -5,6 +5,7 @@ import { formatDate } from "@/utils/formatDate";
 import EmptyState from "@/components/ui/EmptyState.vue";
 import Spinner from "@/components/ui/Spinner.vue";
 import DoughnutChart from "@/views/components/dashboard/DoughnutChart.vue";
+import NotificationToast from "@/components/ui/NotificationToast.vue";
 
 interface InfoItem {
   article: string;
@@ -34,18 +35,30 @@ const deliveries = ref<Delivery[]>([]);
 const isLoaddeliveries = ref<boolean>(false);
 const isLoadInfoData = ref<boolean>(false);
 const isLoadStats = ref<boolean>(false);
+const toasts = ref<{ type: string; message: string; id: number }[]>([]);
 
 const handleEnter = async (): Promise<void> => {
   if (!inputValue.value.trim()) return;
 
   try {
-    const response = await api.patch("/ver1/update_by_barcode/", {
+    const response = await api.patch("/ver1/update_by_barcode", {
       barcode: inputValue.value,
     });
 
-    alert(`Succesfuly: ${inputValue.value}`);
+    toasts.value.push({
+      type: "success",
+      message: response.data.message,
+      id: Date.now(),
+    });
+    if (selectedInvoice.value) {
+      await reloadSelectedInvoice();
+    }
   } catch (error) {
-    alert("Error");
+    toasts.value.push({
+      type: "danger",
+      message: error.response?.data?.message || "Error",
+      id: Date.now(),
+    });
   } finally {
     inputValue.value = "";
   }
@@ -80,12 +93,14 @@ const DoughnutData = computed(() => {
 
 const infoData = ref<InfoItem[]>([]);
 const stats = ref<StatItem[]>([]);
+const selectedInvoice = ref<Delivery | null>(null);
 
-async function toggleInvoice(invoice: Delivery): Promise<void> {
+async function loadInvoiceData(invoice: Delivery) {
   isLoadInfoData.value = true;
   isLoadStats.value = true;
   infoData.value = [];
   stats.value = [];
+
   try {
     const response = await api.get<InfoItem[]>("/ver1/infoData", {
       params: {
@@ -96,12 +111,28 @@ async function toggleInvoice(invoice: Delivery): Promise<void> {
 
     infoData.value = response.data[0] ?? [];
     stats.value = response.data[1] ?? [];
-  } catch (err) {
+  } catch {
     infoData.value = [];
+    stats.value = [];
   } finally {
     isLoadInfoData.value = false;
     isLoadStats.value = false;
   }
+}
+
+async function toggleInvoice(invoice: Delivery) {
+  if (
+    !selectedInvoice.value ||
+    selectedInvoice.value.number !== invoice.number
+  ) {
+    selectedInvoice.value = invoice;
+    await loadInvoiceData(invoice);
+  }
+}
+
+async function reloadSelectedInvoice() {
+  if (!selectedInvoice.value) return;
+  await loadInvoiceData(selectedInvoice.value);
 }
 
 onMounted(() => {
@@ -265,6 +296,13 @@ onMounted(() => {
           class="bg-white rounded-lg shadow p-2 flex items-center justify-center h-[200px]"
         >
           <DoughnutChart :data="DoughnutData" />
+        </div>
+        <div class="fixed bottom-5 right-5 z-50 flex flex-col-reverse gap-2">
+          <NotificationToast
+            v-for="toast in toasts"
+            :key="toast.id"
+            v-bind="toast"
+          />
         </div>
       </div>
     </div>
