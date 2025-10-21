@@ -7,8 +7,10 @@ import Spinner from "@/components/ui/Spinner.vue";
 import DoughnutChart from "@/views/components/dashboard/DoughnutChart.vue";
 import NotificationToast from "@/components/ui/NotificationToast.vue";
 import { useStatCards } from "@/composables/useStatCards";
+import { useInvoiceStore } from "@/stores/invoiceStore";
 
 const { loadStatCards } = useStatCards();
+const invoiceStore = useInvoiceStore();
 
 interface InfoItem {
   article: string;
@@ -54,9 +56,9 @@ const handleEnter = async (): Promise<void> => {
       id: Date.now(),
     });
     loadStatCards();
-    if (selectedInvoice.value) {
+    if (invoiceStore.selectedInvoice) {
       await loadInvoice();
-      await reloadSelectedInvoice();
+      //await reloadSelectedInvoice();
     }
   } catch (error) {
     toasts.value.push({
@@ -74,7 +76,25 @@ async function loadInvoice(): Promise<void> {
   try {
     const response = await api.get<Delivery[]>("/ver1/invoice");
     deliveries.value = response.data ?? [];
+
+    if (deliveries.value.length === 0) return;
+
+    const current = invoiceStore.selectedInvoice;
+    if (current) {
+      const found = deliveries.value.find(
+        (inv) => inv.number === current.number
+      );
+
+      if (found) {
+        await reloadSelectedInvoice();
+      } else {
+        await toggleInvoice(deliveries.value[0]);
+      }
+    } else {
+      await toggleInvoice(deliveries.value[0]);
+    }
   } catch (err) {
+    console.error("loadInvoice error:", err);
   } finally {
     isLoaddeliveries.value = false;
   }
@@ -98,7 +118,7 @@ const DoughnutData = computed(() => {
 
 const infoData = ref<InfoItem[]>([]);
 const stats = ref<StatItem[]>([]);
-const selectedInvoice = ref<Delivery | null>(null);
+//const selectedInvoice = ref<Delivery | null>(null);
 
 async function loadInvoiceData(invoice: Delivery) {
   isLoadInfoData.value = true;
@@ -127,17 +147,17 @@ async function loadInvoiceData(invoice: Delivery) {
 
 async function toggleInvoice(invoice: Delivery) {
   if (
-    !selectedInvoice.value ||
-    selectedInvoice.value.number !== invoice.number
+    !invoiceStore.selectedInvoice ||
+    invoiceStore.selectedInvoice.number !== invoice.number
   ) {
-    selectedInvoice.value = invoice;
+    invoiceStore.selectedInvoice = invoice;
     await loadInvoiceData(invoice);
   }
 }
 
 async function reloadSelectedInvoice() {
-  if (!selectedInvoice.value) return;
-  await loadInvoiceData(selectedInvoice.value);
+  if (!invoiceStore.selectedInvoice) return;
+  await loadInvoiceData(invoiceStore.selectedInvoice);
 }
 
 onMounted(() => {
