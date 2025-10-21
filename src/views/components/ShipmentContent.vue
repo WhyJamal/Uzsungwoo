@@ -6,6 +6,9 @@ import EmptyState from "@/components/ui/EmptyState.vue";
 import Spinner from "@/components/ui/Spinner.vue";
 import DoughnutChart from "@/views/components/dashboard/DoughnutChart.vue";
 import NotificationToast from "@/components/ui/NotificationToast.vue";
+import { useStatCards } from "@/composables/useStatCards";
+
+const { loadStatCards } = useStatCards();
 
 interface InfoItem {
   article: string;
@@ -50,7 +53,9 @@ const handleEnter = async (): Promise<void> => {
       message: response.data.message,
       id: Date.now(),
     });
+    loadStatCards();
     if (selectedInvoice.value) {
+      await loadInvoice();
       await reloadSelectedInvoice();
     }
   } catch (error) {
