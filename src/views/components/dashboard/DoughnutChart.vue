@@ -9,8 +9,9 @@ import {
   ArcElement,
   ChartOptions,
 } from "chart.js";
+import ChartDataLabels from "chartjs-plugin-datalabels";
 
-ChartJS.register(Title, Tooltip, Legend, ArcElement);
+ChartJS.register(Title, Tooltip, Legend, ArcElement, ChartDataLabels);
 
 interface PieItem {
   name: string;
@@ -80,6 +81,13 @@ const chartOptions: ChartOptions<"doughnut"> = {
       callbacks: {
         label: (tooltipItem: any) => `${tooltipItem.label}: ${tooltipItem.raw}`,
       },
+    },
+    datalabels: {
+      color: "#111827",
+      font: { weight: "bold", size: 10 },
+      formatter: (value: number) => value, // Sonni ko‘rsatadi
+      anchor: "center",
+      align: "center",
     },
   },
 };
