@@ -1,21 +1,15 @@
-import { NavigationGuardNext, RouteLocationNormalized } from "vue-router";
-import { useUserStore } from "../stores/user";
+import { useUserStore } from "../stores/userStore";
+import type { Router } from "vue-router";
 
-export function setupRouterGuards(router: any) {
-  router.beforeEach(
-    (
-      to: RouteLocationNormalized,
-      from: RouteLocationNormalized,
-      next: NavigationGuardNext
-    ) => {
-      const userStore = useUserStore();
-      const isLoggedIn = userStore.isLoggedIn;
+export function setupRouterGuards(router: Router) {
+  router.beforeEach((to) => {
+    const userStore = useUserStore();
+    const isLoggedIn = !!userStore.isLoggedIn;
 
-      if (to.meta.requiresAuth && !isLoggedIn) {
-        next("/not-authorized");
-      } else {
-        next();
-      }
+    if (to.meta.requiresAuth && !isLoggedIn) {
+      return { name: "not-authorized" };
     }
-  );
+
+    return true;
+  });
 }

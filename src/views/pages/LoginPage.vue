@@ -68,9 +68,8 @@ import Header from "@/components/headers/Header.vue";
 import { ref, onMounted, nextTick } from "vue";
 import { useRouter } from "vue-router";
 import api from "@/utils/axios";
-import { useUserStore } from "@/stores/user";
+import { useUserStore, type User } from "@/stores/userStore";
 import { roleRoutes } from "@/config/roleRoutes";
-import type { User } from "@/stores/user";
 
 const code = ref<string>("");
 const inputRef = ref<HTMLInputElement | null>(null);

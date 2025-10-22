@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
-import { useRoute } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
+import { useUserStore } from "@/stores/userStore";
 import { User } from "lucide-vue-next";
 
 const route = useRoute();
+const router = useRouter();
+const userStore = useUserStore();
 const isLoginPage = computed(() => route.path === "/");
 
 const isOpen = ref(false);
@@ -25,6 +28,11 @@ function selectLanguage(code: string) {
   localStorage.setItem("lang", code);
   isOpen.value = false;
 }
+
+const logout = () => {
+  userStore.clearUser();
+  router.push("/");
+};
 </script>
 
 <template>
@@ -80,9 +88,18 @@ function selectLanguage(code: string) {
         </div>
 
         <button
+          v-if="!isLoginPage"
           class="w-8 h-8 flex items-center justify-center bg-white text-sky-600 rounded-full shadow hover:bg-gray-100 transition"
         >
           <User />
+        </button>
+
+        <button
+          v-if="!isLoginPage"
+          @click="logout"
+          class="bg-red-500 text-white text-xs md:text-sm font-semibold px-3 py-1.5 rounded-md shadow hover:bg-red-600 transition"
+        >
+          Выход
         </button>
       </div>
     </div>

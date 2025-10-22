@@ -6,9 +6,26 @@ interface User {
 }
 
 export const useUserStore = defineStore("user", {
-  state: () => ({
-    user: JSON.parse(localStorage.getItem("user") || "null") as User | null,
-  }),
+  state: () => {
+    let storedUser: User | null = null;
+    try {
+      storedUser = JSON.parse(localStorage.getItem("user") || "null");
+    } catch {
+      storedUser = null;
+    }
+
+    return {
+      user: storedUser as User | null,
+    };
+  },
+
+  getters: {
+    isLoggedIn: (state): boolean => {
+      const result = !!state.user;
+      return result;
+    },
+  },
+
   actions: {
     setUser(userData: User) {
       this.user = userData;
@@ -18,8 +35,5 @@ export const useUserStore = defineStore("user", {
       this.user = null;
       localStorage.removeItem("user");
     },
-  },
-  getters: {
-    isLoggedIn: (state): boolean => !!state.user,
   },
 });

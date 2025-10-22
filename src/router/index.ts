@@ -3,7 +3,6 @@ import {
   createWebHistory,
   type RouteRecordRaw,
 } from "vue-router";
-import { setupRouterGuards } from "./guards";
 import LoginPage from "@/views/pages/LoginPage.vue";
 import ShipmentForm from "@/views/pages/ShipmentForm.vue";
 import SecurityForm from "@/views/pages/SecurityForm.vue";
@@ -18,11 +17,13 @@ const routes: RouteRecordRaw[] = [
     path: "/shipment",
     name: "shipment",
     component: ShipmentForm,
+    meta: { requiresAuth: true },
   },
   {
     path: "/security",
     name: "security",
     component: SecurityForm,
+    meta: { requiresAuth: true },
   },
   {
     path: "/not-authorized",
@@ -39,7 +40,5 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes,
 });
-
-setupRouterGuards(router);
 
 export default router;
