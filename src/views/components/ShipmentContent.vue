@@ -56,6 +56,9 @@ const handleEnter = async (): Promise<void> => {
       id: Date.now(),
     });
     loadStatCards();
+    infoData.value = [];
+    stats.value = [];
+
     if (invoiceStore.selectedInvoice) {
       await loadInvoice();
       //await reloadSelectedInvoice();
