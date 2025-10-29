@@ -97,7 +97,7 @@ const logout = () => {
         <button
           v-if="!isLoginPage"
           @click="logout"
-          class="bg-red-500 text-white text-xs md:text-sm font-semibold px-3 py-1.5 rounded-md shadow hover:bg-red-600 transition"
+          class="bg-red-500 text-white text-xs md:text-sm font-semibold px-3 py-0.5 rounded-md shadow hover:bg-red-600 transition"
         >
           Выход
         </button>
